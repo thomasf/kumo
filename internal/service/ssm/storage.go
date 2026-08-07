@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/sivchari/kumo/internal/storage"
+	"github.com/thomasf/kumo/internal/storage"
 )
 
 // Default values.

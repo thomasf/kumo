@@ -3,7 +3,7 @@ package kms
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // KeyState represents the state of a KMS key.

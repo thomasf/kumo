@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // CreateQueue handles the CreateQueue action.

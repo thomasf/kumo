@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 func TestReadJSONRequest(t *testing.T) {

@@ -3,7 +3,7 @@ package sfn
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // StateMachineStatus represents the status of a state machine.

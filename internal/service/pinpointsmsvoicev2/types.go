@@ -4,7 +4,7 @@ package pinpointsmsvoicev2
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // SentTextMessage represents a sent text message for debugging purposes.

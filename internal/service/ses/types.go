@@ -5,7 +5,7 @@ import (
 	"encoding/xml"
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // Identity represents a verified email identity.

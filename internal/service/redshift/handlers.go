@@ -10,7 +10,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 const redshiftXMLNS = "http://redshift.amazonaws.com/doc/2012-12-01/"

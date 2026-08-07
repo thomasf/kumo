@@ -8,8 +8,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	_ "github.com/sivchari/kumo/internal/registry"
-	"github.com/sivchari/kumo/internal/service"
+	_ "github.com/thomasf/kumo/internal/registry"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 func TestClassifySkipReason(t *testing.T) {

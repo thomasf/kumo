@@ -7,7 +7,7 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/sivchari/kumo/internal/storage"
+	"github.com/thomasf/kumo/internal/storage"
 )
 
 func TestScheduleSave_FlushWritesSnapshot(t *testing.T) {

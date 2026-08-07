@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/sivchari/kumo/internal/service/ec2"
+	"github.com/thomasf/kumo/internal/service/ec2"
 )
 
 // awsEC2Subnet adapts AWS::EC2::Subnet to the EC2 storage. Like

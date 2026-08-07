@@ -3,7 +3,7 @@ package cognito
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // UserPoolStatus represents the status of a user pool.

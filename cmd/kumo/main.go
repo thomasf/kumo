@@ -7,9 +7,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	kumocli "github.com/sivchari/kumo/cli"
-	_ "github.com/sivchari/kumo/internal/registry" // Register all services via init().
-	"github.com/sivchari/kumo/internal/server"
+	kumocli "github.com/thomasf/kumo/cli"
+	_ "github.com/thomasf/kumo/internal/registry" // Register all services via init().
+	"github.com/thomasf/kumo/internal/server"
 )
 
 func main() {

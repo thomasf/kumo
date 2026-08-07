@@ -6,8 +6,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/sivchari/kumo/internal/service"
-	"github.com/sivchari/kumo/internal/service/execapi"
+	"github.com/thomasf/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service/execapi"
 )
 
 const (

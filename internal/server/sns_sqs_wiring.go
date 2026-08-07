@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
-	"github.com/sivchari/kumo/internal/service/lambda"
-	"github.com/sivchari/kumo/internal/service/s3"
-	"github.com/sivchari/kumo/internal/service/sns"
-	"github.com/sivchari/kumo/internal/service/sqs"
+	"github.com/thomasf/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service/lambda"
+	"github.com/thomasf/kumo/internal/service/s3"
+	"github.com/thomasf/kumo/internal/service/sns"
+	"github.com/thomasf/kumo/internal/service/sqs"
 )
 
 // alarmActionWirer is satisfied by cloudwatch.Service. Using a local

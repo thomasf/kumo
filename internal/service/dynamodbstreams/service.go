@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/sivchari/kumo/internal/service"
-	"github.com/sivchari/kumo/internal/streams"
+	"github.com/thomasf/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/streams"
 )
 
 // Compile-time check that Service implements io.Closer.

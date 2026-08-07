@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // actionMethodBlocklist lists exported methods on a JSONProtocolService that

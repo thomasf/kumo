@@ -1,4 +1,4 @@
-module github.com/sivchari/kumo
+module github.com/thomasf/kumo
 
 go 1.25.0
 

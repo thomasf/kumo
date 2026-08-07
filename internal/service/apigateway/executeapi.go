@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/sivchari/kumo/internal/service/execapi"
+	"github.com/thomasf/kumo/internal/service/execapi"
 )
 
 // maxExecuteResources bounds how many resources are scanned when resolving a

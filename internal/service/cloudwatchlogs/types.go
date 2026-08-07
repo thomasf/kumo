@@ -1,7 +1,7 @@
 // Package cloudwatchlogs provides CloudWatch Logs service emulation for kumo.
 package cloudwatchlogs
 
-import "github.com/sivchari/kumo/internal/service"
+import "github.com/thomasf/kumo/internal/service"
 
 // LogGroup represents a log group in CloudWatch Logs.
 type LogGroup struct {

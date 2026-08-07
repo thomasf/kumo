@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sivchari/kumo/internal/cligen"
-	_ "github.com/sivchari/kumo/internal/registry"
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/cligen"
+	_ "github.com/thomasf/kumo/internal/registry"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // TestDiscover_SQSCasing proves the exact casing trap the plan calls out:

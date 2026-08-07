@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/sivchari/kumo/internal/service/cloudfront/cache"
+	"github.com/thomasf/kumo/internal/service/cloudfront/cache"
 )
 
 const maxEdgeCacheEntries = 1024

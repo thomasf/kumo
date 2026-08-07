@@ -9,7 +9,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/sivchari/kumo/internal/storage"
+	"github.com/thomasf/kumo/internal/storage"
 )
 
 const (

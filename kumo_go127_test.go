@@ -13,7 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 
-	"github.com/sivchari/kumo"
+	"github.com/thomasf/kumo"
 )
 
 func TestNewTestServerHealth(t *testing.T) {

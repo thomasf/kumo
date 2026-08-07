@@ -10,7 +10,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 const elasticacheXMLNS = "http://elasticache.amazonaws.com/doc/2015-02-02/"

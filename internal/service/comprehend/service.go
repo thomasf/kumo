@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // Compile-time checks to ensure Service implements required interfaces.

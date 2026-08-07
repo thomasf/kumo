@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sivchari/kumo/internal/service/iam"
+	"github.com/thomasf/kumo/internal/service/iam"
 )
 
 // post simulates an SDK request: the X-Amz-Target header sets the

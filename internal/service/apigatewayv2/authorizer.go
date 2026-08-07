@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sivchari/kumo/internal/service/execapi"
+	"github.com/thomasf/kumo/internal/service/execapi"
 )
 
 // authorizerTypeJWT is the only authorizer type kumo evaluates at execute

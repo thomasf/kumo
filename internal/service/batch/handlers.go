@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // CreateComputeEnvironment handles the CreateComputeEnvironment operation.

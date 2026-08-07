@@ -3,7 +3,7 @@ package ecr
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // Repository represents an ECR repository.

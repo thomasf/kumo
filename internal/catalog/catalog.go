@@ -11,7 +11,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // CategoryOrder defines the section order of the generated service catalog.

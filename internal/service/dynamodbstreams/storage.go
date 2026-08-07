@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/sivchari/kumo/internal/streams"
+	"github.com/thomasf/kumo/internal/streams"
 )
 
 const (

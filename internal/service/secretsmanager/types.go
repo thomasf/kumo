@@ -4,7 +4,7 @@ package secretsmanager
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // Secret represents a secret in Secrets Manager.

@@ -13,10 +13,10 @@ import (
 	"runtime"
 	"sort"
 
-	"github.com/sivchari/kumo/internal/cligen"
+	"github.com/thomasf/kumo/internal/cligen"
 	// Register all services so service.Services() returns the full catalog.
-	_ "github.com/sivchari/kumo/internal/registry"
-	"github.com/sivchari/kumo/internal/service"
+	_ "github.com/thomasf/kumo/internal/registry"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 func main() {

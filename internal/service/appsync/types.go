@@ -1,7 +1,7 @@
 // Package appsync provides AWS AppSync service emulation for kumo.
 package appsync
 
-import "github.com/sivchari/kumo/internal/service"
+import "github.com/thomasf/kumo/internal/service"
 
 // Authentication types.
 const (

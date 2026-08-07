@@ -18,7 +18,7 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/crypto/ssh"
 
-	"github.com/sivchari/kumo/internal/storage"
+	"github.com/thomasf/kumo/internal/storage"
 )
 
 // Option is a configuration option for MemoryStorage.

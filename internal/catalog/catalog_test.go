@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	// Register all services so service.Services() returns the full catalog.
-	"github.com/sivchari/kumo/internal/catalog"
-	_ "github.com/sivchari/kumo/internal/registry"
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/catalog"
+	_ "github.com/thomasf/kumo/internal/registry"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // readmePath is the README location relative to this package directory.

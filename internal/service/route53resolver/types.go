@@ -1,7 +1,7 @@
 // Package route53resolver provides Route 53 Resolver service emulation for kumo.
 package route53resolver
 
-import "github.com/sivchari/kumo/internal/service"
+import "github.com/thomasf/kumo/internal/service"
 
 // ResolverEndpoint represents a Route 53 Resolver endpoint.
 type ResolverEndpoint struct {

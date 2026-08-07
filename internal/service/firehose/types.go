@@ -4,7 +4,7 @@ package firehose
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // DeliveryStreamStatus represents the status of a delivery stream.

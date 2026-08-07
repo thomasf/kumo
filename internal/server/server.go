@@ -17,8 +17,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/sivchari/kumo/internal/initdir"
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/initdir"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // Config holds the server configuration.

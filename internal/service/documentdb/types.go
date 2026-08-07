@@ -3,7 +3,7 @@ package documentdb
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // DBCluster represents a DocumentDB database cluster.

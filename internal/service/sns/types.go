@@ -4,7 +4,7 @@ package sns
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // Topic represents an SNS topic.

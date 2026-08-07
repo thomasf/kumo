@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/sivchari/kumo/internal/service/iam"
+	"github.com/thomasf/kumo/internal/service/iam"
 )
 
 // awsIAMRole adapts AWS::IAM::Role to kumo's IAM storage.

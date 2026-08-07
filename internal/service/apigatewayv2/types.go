@@ -3,7 +3,7 @@ package apigatewayv2
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // API represents an API Gateway v2 API (HTTP or WebSocket).

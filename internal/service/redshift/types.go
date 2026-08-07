@@ -3,7 +3,7 @@ package redshift
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // Cluster represents a Redshift cluster.

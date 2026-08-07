@@ -3,7 +3,7 @@ package elasticache
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // CacheCluster represents an ElastiCache cluster.

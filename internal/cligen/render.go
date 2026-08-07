@@ -9,7 +9,7 @@ import (
 	"sort"
 	"text/template"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 //go:embed templates/service.go.tmpl

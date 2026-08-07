@@ -3,7 +3,7 @@ package cloudcontrol
 import (
 	"fmt"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // lookupStorage finds the registered Service named serviceName and casts

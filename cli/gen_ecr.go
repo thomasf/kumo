@@ -7,8 +7,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
 	"github.com/aws/aws-sdk-go-v2/service/ecr/types"
-	"github.com/sivchari/kumo/internal/cligen"
 	"github.com/spf13/cobra"
+	"github.com/thomasf/kumo/internal/cligen"
 	"reflect"
 )
 

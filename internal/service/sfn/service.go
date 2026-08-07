@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 const defaultBaseURL = "http://localhost:4566"

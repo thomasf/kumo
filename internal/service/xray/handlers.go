@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // PutTraceSegments handles the PutTraceSegments operation.

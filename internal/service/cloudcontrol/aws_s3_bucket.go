@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/sivchari/kumo/internal/service/s3"
+	"github.com/thomasf/kumo/internal/service/s3"
 )
 
 // awsS3Bucket adapts AWS::S3::Bucket to kumo's S3 storage. The Properties

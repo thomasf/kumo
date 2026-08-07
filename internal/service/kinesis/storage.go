@@ -14,7 +14,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/sivchari/kumo/internal/storage"
+	"github.com/thomasf/kumo/internal/storage"
 )
 
 // Error codes.

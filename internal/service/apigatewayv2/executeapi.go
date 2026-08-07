@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/sivchari/kumo/internal/service/execapi"
+	"github.com/thomasf/kumo/internal/service/execapi"
 )
 
 // defaultStageName is the HTTP API auto-deploy catch-all stage.

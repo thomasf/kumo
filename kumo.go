@@ -16,8 +16,8 @@ import (
 
 	// Register all services via init(). See internal/registry for the
 	// single canonical list shared with the CLI and the README generator.
-	_ "github.com/sivchari/kumo/internal/registry"
-	"github.com/sivchari/kumo/internal/server"
+	_ "github.com/thomasf/kumo/internal/registry"
+	"github.com/thomasf/kumo/internal/server"
 )
 
 // Server is an in-process AWS service emulator.

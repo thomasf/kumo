@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // CreateApplication handles the CreateApplication API operation.

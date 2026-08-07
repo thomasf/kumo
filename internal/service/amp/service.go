@@ -10,7 +10,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // backendEnvVar is the env var pointing at the real local Prometheus

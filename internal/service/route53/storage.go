@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/sivchari/kumo/internal/storage"
+	"github.com/thomasf/kumo/internal/storage"
 )
 
 var (

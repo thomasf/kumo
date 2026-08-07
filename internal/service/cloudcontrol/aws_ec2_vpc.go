@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/sivchari/kumo/internal/service/ec2"
+	"github.com/thomasf/kumo/internal/service/ec2"
 )
 
 // awsEC2VPC adapts AWS::EC2::VPC to kumo's EC2 storage. Only the fields

@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/sivchari/kumo/internal/storage"
+	"github.com/thomasf/kumo/internal/storage"
 )
 
 // defaultAccountID is the default AWS account ID used in the emulator.

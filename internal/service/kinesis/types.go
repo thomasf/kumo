@@ -3,7 +3,7 @@ package kinesis
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // StreamStatus represents the status of a Kinesis stream.

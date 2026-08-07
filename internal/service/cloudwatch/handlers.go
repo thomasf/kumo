@@ -9,8 +9,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/sivchari/kumo/internal/server"
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/server"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // Error codes for CloudWatch.

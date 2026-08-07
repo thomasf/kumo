@@ -1,7 +1,7 @@
 // Package rekognition provides AWS Rekognition service emulation.
 package rekognition
 
-import "github.com/sivchari/kumo/internal/service"
+import "github.com/thomasf/kumo/internal/service"
 
 // Image represents an image for Rekognition operations.
 type Image struct {

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // Compile-time check that Service implements io.Closer.

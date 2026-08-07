@@ -16,8 +16,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/sivchari/kumo/internal/awsname"
-	"github.com/sivchari/kumo/internal/storage"
+	"github.com/thomasf/kumo/internal/awsname"
+	"github.com/thomasf/kumo/internal/storage"
 )
 
 // DeduplicationEntry holds deduplication information for FIFO queues.

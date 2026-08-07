@@ -9,9 +9,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/sivchari/kumo/cli"
-	"github.com/sivchari/kumo/internal/cligen"
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/cli"
+	"github.com/thomasf/kumo/internal/cligen"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // restCLIAliases maps a kumo service name to additional cli.NewRootCmd()

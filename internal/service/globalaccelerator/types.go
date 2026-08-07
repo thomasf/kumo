@@ -3,7 +3,7 @@ package globalaccelerator
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // AcceleratorStatus represents the status of an accelerator.

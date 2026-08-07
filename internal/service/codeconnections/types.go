@@ -3,7 +3,7 @@ package codeconnections
 import (
 	"time"
 
-	"github.com/sivchari/kumo/internal/service"
+	"github.com/thomasf/kumo/internal/service"
 )
 
 // ConnectionStatus represents the status of a connection.

@@ -1,6 +1,6 @@
 package ce
 
-import "github.com/sivchari/kumo/internal/service"
+import "github.com/thomasf/kumo/internal/service"
 
 // DateInterval represents a time period.
 type DateInterval struct {
