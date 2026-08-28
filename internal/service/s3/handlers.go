@@ -9,7 +9,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -134,6 +133,7 @@ var bucketGetSubresources = []struct {
 	{"lifecycle", (*Service).GetBucketLifecycleConfiguration},
 	{"cors", (*Service).GetBucketCors},
 	{"notification", (*Service).GetBucketNotificationConfiguration},
+	{"tagging", (*Service).GetBucketTagging},
 }
 
 func (s *Service) handleBucketGet(w http.ResponseWriter, r *http.Request) {
@@ -206,7 +206,6 @@ func bucketSubresourceErrorCode(q map[string][]string) (string, bool) {
 	mapping := map[string]string{
 		"cors":              "NoSuchCORSConfiguration",
 		"replication":       "ReplicationConfigurationNotFoundError",
-		"tagging":           "NoSuchTagSet",
 		"object-lock":       "ObjectLockConfigurationNotFoundError",
 		"ownershipControls": "OwnershipControlsNotFoundError",
 	}
@@ -353,6 +352,12 @@ func (s *Service) handleObjectGet(w http.ResponseWriter, r *http.Request) {
 func (s *Service) handleObjectDelete(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Query().Get("uploadId") != "" {
 		s.AbortMultipartUpload(w, r)
+
+		return
+	}
+
+	if r.URL.Query().Has("tagging") {
+		s.DeleteObjectTagging(w, r)
 
 		return
 	}
@@ -1612,95 +1617,64 @@ func toCommonPrefixes(prefixes []string) []CommonPrefix {
 	return result
 }
 
+// bucketPutSubresources maps a PUT query-parameter key to its handler.
+// Like the GET table, the selectors are mutually exclusive and the first
+// present key wins; a request with none of them is a CreateBucket.
+var bucketPutSubresources = []struct {
+	key     string
+	handler func(*Service, http.ResponseWriter, *http.Request)
+}{
+	{"versioning", (*Service).PutBucketVersioning},
+	{"notification", (*Service).PutBucketNotificationConfiguration},
+	{"cors", (*Service).PutBucketCors},
+	{"publicAccessBlock", (*Service).PutPublicAccessBlock},
+	{"encryption", (*Service).PutBucketEncryption},
+	{"policy", (*Service).PutBucketPolicy},
+	{"logging", (*Service).PutBucketLogging},
+	{"website", (*Service).PutBucketWebsite},
+	{"lifecycle", (*Service).PutBucketLifecycleConfiguration},
+	{"tagging", (*Service).PutBucketTagging},
+}
+
 // handleBucketPut routes PUT /{bucket} requests based on query parameters.
 func (s *Service) handleBucketPut(w http.ResponseWriter, r *http.Request) {
-	if _, ok := r.URL.Query()["versioning"]; ok {
-		s.PutBucketVersioning(w, r)
+	query := r.URL.Query()
 
-		return
-	}
+	for _, sub := range bucketPutSubresources {
+		if _, ok := query[sub.key]; ok {
+			sub.handler(s, w, r)
 
-	if _, ok := r.URL.Query()["notification"]; ok {
-		s.PutBucketNotificationConfiguration(w, r)
-
-		return
-	}
-
-	if _, ok := r.URL.Query()["cors"]; ok {
-		s.PutBucketCors(w, r)
-
-		return
-	}
-
-	if _, ok := r.URL.Query()["publicAccessBlock"]; ok {
-		s.PutPublicAccessBlock(w, r)
-
-		return
-	}
-
-	if _, ok := r.URL.Query()["encryption"]; ok {
-		s.PutBucketEncryption(w, r)
-
-		return
-	}
-
-	if _, ok := r.URL.Query()["policy"]; ok {
-		s.PutBucketPolicy(w, r)
-
-		return
-	}
-
-	if _, ok := r.URL.Query()["logging"]; ok {
-		s.PutBucketLogging(w, r)
-
-		return
-	}
-
-	if _, ok := r.URL.Query()["website"]; ok {
-		s.PutBucketWebsite(w, r)
-
-		return
-	}
-
-	if _, ok := r.URL.Query()["lifecycle"]; ok {
-		s.PutBucketLifecycleConfiguration(w, r)
-
-		return
+			return
+		}
 	}
 
 	s.CreateBucket(w, r)
 }
 
+// bucketDeleteSubresources maps a DELETE query-parameter key to its
+// handler. A request with none of them deletes the bucket itself.
+var bucketDeleteSubresources = []struct {
+	key     string
+	handler func(*Service, http.ResponseWriter, *http.Request)
+}{
+	{"publicAccessBlock", (*Service).DeletePublicAccessBlock},
+	{"encryption", (*Service).DeleteBucketEncryption},
+	{"policy", (*Service).DeleteBucketPolicy},
+	{"website", (*Service).DeleteBucketWebsite},
+	{"lifecycle", (*Service).DeleteBucketLifecycle},
+	{"tagging", (*Service).DeleteBucketTagging},
+}
+
 // handleBucketDelete dispatches DELETE /{bucket} requests based on query parameters.
 func (s *Service) handleBucketDelete(w http.ResponseWriter, r *http.Request) {
-	if _, ok := r.URL.Query()["publicAccessBlock"]; ok {
-		s.DeletePublicAccessBlock(w, r)
+	query := r.URL.Query()
 
-		return
-	}
+	for _, sub := range bucketDeleteSubresources {
+		if _, ok := query[sub.key]; ok {
+			sub.handler(s, w, r)
 
-	if _, ok := r.URL.Query()["encryption"]; ok {
-		s.DeleteBucketEncryption(w, r)
-
-		return
-	}
-
-	if _, ok := r.URL.Query()["policy"]; ok {
-		s.DeleteBucketPolicy(w, r)
-
-		return
-	}
-
-	if _, ok := r.URL.Query()["website"]; ok {
-		s.DeleteBucketWebsite(w, r)
-
-		return
-	}
-
-	if _, ok := r.URL.Query()["lifecycle"]; ok {
-		s.DeleteBucketLifecycle(w, r)
-
-		return
+			return
+		}
 	}
 
 	s.DeleteBucket(w, r)
@@ -2683,21 +2657,24 @@ func (s *Service) GetObjectTagging(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tagging := Tagging{TagSet: TagSet{Tags: make([]Tag, 0, len(tags))}}
-
-	keys := make([]string, 0, len(tags))
-	for k := range tags {
-		keys = append(keys, k)
-	}
-
-	sort.Strings(keys)
-
-	for _, k := range keys {
-		tagging.TagSet.Tags = append(tagging.TagSet.Tags, Tag{Key: k, Value: tags[k]})
-	}
+	tagging := taggingFromMap(tags)
 
 	w.Header().Set("Content-Type", "application/xml")
 
 	resp, _ := xml.Marshal(tagging)
 	_, _ = w.Write(resp)
+}
+
+// DeleteObjectTagging handles DELETE /{bucket}/{key}?tagging.
+func (s *Service) DeleteObjectTagging(w http.ResponseWriter, r *http.Request) {
+	bucket := r.PathValue("bucket")
+	key := r.PathValue("key")
+
+	if err := s.storage.DeleteObjectTagging(r.Context(), bucket, key); err != nil {
+		handleBucketLevelError(w, r, err)
+
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }

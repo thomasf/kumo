@@ -63,6 +63,12 @@ type Storage interface {
 	// Object tagging
 	PutObjectTagging(ctx context.Context, bucket, key string, tags map[string]string) error
 	GetObjectTagging(ctx context.Context, bucket, key string) (map[string]string, error)
+	DeleteObjectTagging(ctx context.Context, bucket, key string) error
+
+	// Bucket tagging
+	PutBucketTagging(ctx context.Context, bucket string, tags map[string]string) error
+	GetBucketTagging(ctx context.Context, bucket string) (map[string]string, error)
+	DeleteBucketTagging(ctx context.Context, bucket string) error
 
 	// Object ACL
 	PutObjectACL(ctx context.Context, bucket, key string, acl *ObjectACL) error
@@ -161,6 +167,7 @@ type MemoryBucket struct {
 	Website              *WebsiteConfiguration         `json:"website,omitempty"`              // static-site-hosting configuration
 	Lifecycle            *LifecycleConfiguration       `json:"lifecycle,omitempty"`            // expiration / transition rules
 	ObjectRestores       map[string]*RestoreState      `json:"objectRestores,omitempty"`       // per-object restore state (key -> state)
+	Tags                 map[string]string             `json:"tags,omitempty"`                 // bucket tag set (nil/empty == NoSuchTagSet)
 }
 
 // BucketLoggingConfig stores the destination for server access logs.
@@ -643,6 +650,30 @@ func (s *MemoryStorage) GetObjectTagging(_ context.Context, bucket, key string) 
 	}
 
 	return obj.Tags, nil
+}
+
+// DeleteObjectTagging removes every tag from an object. Idempotent —
+// deleting from an untagged object is a no-op.
+func (s *MemoryStorage) DeleteObjectTagging(_ context.Context, bucket, key string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	bd, exists := s.Buckets[bucket]
+	if !exists {
+		return &BucketError{Code: "NoSuchBucket", Message: "The specified bucket does not exist"}
+	}
+
+	obj, exists := bd.Objects[key]
+	if !exists {
+		return &BucketError{Code: "NoSuchKey", Message: "The specified key does not exist."}
+	}
+
+	obj.Tags = nil
+	bd.Objects[key] = obj
+
+	s.saveLocked()
+
+	return nil
 }
 
 // DeleteObject deletes an object.

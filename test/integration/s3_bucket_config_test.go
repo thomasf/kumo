@@ -5,6 +5,7 @@ package integration
 import (
 	"context"
 	"errors"
+	"strings"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -250,4 +251,178 @@ func TestS3_BucketPolicy(t *testing.T) {
 		t.Fatal("expected error after policy is deleted, got nil")
 	}
 	assertS3ErrorCode(t, err, "NoSuchBucketPolicy")
+}
+
+func TestS3_BucketTagging(t *testing.T) {
+	client := newS3Client(t)
+	ctx := t.Context()
+	bucketName := "test-bucket-tagging"
+
+	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)})
+	if err != nil {
+		t.Fatalf("failed to create bucket: %v", err)
+	}
+
+	t.Cleanup(func() {
+		_, _ = client.DeleteBucket(context.Background(), &s3.DeleteBucketInput{Bucket: aws.String(bucketName)})
+	})
+
+	// GET before PUT returns NoSuchTagSet.
+	_, err = client.GetBucketTagging(ctx, &s3.GetBucketTaggingInput{Bucket: aws.String(bucketName)})
+	if err == nil {
+		t.Fatal("expected error before tags are set, got nil")
+	}
+	assertS3ErrorCode(t, err, "NoSuchTagSet")
+
+	_, err = client.PutBucketTagging(ctx, &s3.PutBucketTaggingInput{
+		Bucket: aws.String(bucketName),
+		Tagging: &types.Tagging{
+			TagSet: []types.Tag{
+				{Key: aws.String("env"), Value: aws.String("prod")},
+				{Key: aws.String("team"), Value: aws.String("platform")},
+			},
+		},
+	})
+	if err != nil {
+		t.Fatalf("failed to put bucket tagging: %v", err)
+	}
+
+	getResult, err := client.GetBucketTagging(ctx, &s3.GetBucketTaggingInput{Bucket: aws.String(bucketName)})
+	if err != nil {
+		t.Fatalf("failed to get bucket tagging: %v", err)
+	}
+	golden.New(t, golden.WithIgnoreFields("ResultMetadata")).Assert(t.Name(), getResult)
+
+	// PUT replaces the whole tag set rather than merging into it.
+	_, err = client.PutBucketTagging(ctx, &s3.PutBucketTaggingInput{
+		Bucket: aws.String(bucketName),
+		Tagging: &types.Tagging{
+			TagSet: []types.Tag{{Key: aws.String("env"), Value: aws.String("staging")}},
+		},
+	})
+	if err != nil {
+		t.Fatalf("failed to replace bucket tagging: %v", err)
+	}
+
+	replaced, err := client.GetBucketTagging(ctx, &s3.GetBucketTaggingInput{Bucket: aws.String(bucketName)})
+	if err != nil {
+		t.Fatalf("failed to get bucket tagging after replace: %v", err)
+	}
+
+	if len(replaced.TagSet) != 1 || aws.ToString(replaced.TagSet[0].Value) != "staging" {
+		t.Fatalf("expected the tag set to be replaced, got %v", replaced.TagSet)
+	}
+
+	_, err = client.DeleteBucketTagging(ctx, &s3.DeleteBucketTaggingInput{Bucket: aws.String(bucketName)})
+	if err != nil {
+		t.Fatalf("failed to delete bucket tagging: %v", err)
+	}
+
+	_, err = client.GetBucketTagging(ctx, &s3.GetBucketTaggingInput{Bucket: aws.String(bucketName)})
+	if err == nil {
+		t.Fatal("expected error after tags are deleted, got nil")
+	}
+	assertS3ErrorCode(t, err, "NoSuchTagSet")
+}
+
+func TestS3_BucketTaggingInvalidTag(t *testing.T) {
+	client := newS3Client(t)
+	ctx := t.Context()
+	bucketName := "test-bucket-tagging-invalid"
+
+	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)})
+	if err != nil {
+		t.Fatalf("failed to create bucket: %v", err)
+	}
+
+	t.Cleanup(func() {
+		_, _ = client.DeleteBucket(context.Background(), &s3.DeleteBucketInput{Bucket: aws.String(bucketName)})
+	})
+
+	// Two tags with the same key is InvalidTag, not a silent overwrite.
+	_, err = client.PutBucketTagging(ctx, &s3.PutBucketTaggingInput{
+		Bucket: aws.String(bucketName),
+		Tagging: &types.Tagging{
+			TagSet: []types.Tag{
+				{Key: aws.String("env"), Value: aws.String("prod")},
+				{Key: aws.String("env"), Value: aws.String("staging")},
+			},
+		},
+	})
+	if err == nil {
+		t.Fatal("expected InvalidTag for duplicate tag keys, got nil")
+	}
+	assertS3ErrorCode(t, err, "InvalidTag")
+
+	// The rejected request must not have left tags behind.
+	_, err = client.GetBucketTagging(ctx, &s3.GetBucketTaggingInput{Bucket: aws.String(bucketName)})
+	if err == nil {
+		t.Fatal("expected NoSuchTagSet after a rejected PUT, got nil")
+	}
+	assertS3ErrorCode(t, err, "NoSuchTagSet")
+}
+
+func TestS3_ObjectTaggingDelete(t *testing.T) {
+	client := newS3Client(t)
+	ctx := t.Context()
+	bucketName := "test-object-tagging-delete"
+	key := "tagged.txt"
+
+	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)})
+	if err != nil {
+		t.Fatalf("failed to create bucket: %v", err)
+	}
+
+	t.Cleanup(func() {
+		_, _ = client.DeleteObject(context.Background(), &s3.DeleteObjectInput{
+			Bucket: aws.String(bucketName), Key: aws.String(key),
+		})
+		_, _ = client.DeleteBucket(context.Background(), &s3.DeleteBucketInput{Bucket: aws.String(bucketName)})
+	})
+
+	_, err = client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket:  aws.String(bucketName),
+		Key:     aws.String(key),
+		Body:    strings.NewReader("hello"),
+		Tagging: aws.String("env=prod"),
+	})
+	if err != nil {
+		t.Fatalf("failed to put object: %v", err)
+	}
+
+	tagged, err := client.GetObjectTagging(ctx, &s3.GetObjectTaggingInput{
+		Bucket: aws.String(bucketName), Key: aws.String(key),
+	})
+	if err != nil {
+		t.Fatalf("failed to get object tagging: %v", err)
+	}
+
+	if len(tagged.TagSet) != 1 {
+		t.Fatalf("expected 1 tag before delete, got %v", tagged.TagSet)
+	}
+
+	_, err = client.DeleteObjectTagging(ctx, &s3.DeleteObjectTaggingInput{
+		Bucket: aws.String(bucketName), Key: aws.String(key),
+	})
+	if err != nil {
+		t.Fatalf("failed to delete object tagging: %v", err)
+	}
+
+	untagged, err := client.GetObjectTagging(ctx, &s3.GetObjectTaggingInput{
+		Bucket: aws.String(bucketName), Key: aws.String(key),
+	})
+	if err != nil {
+		t.Fatalf("failed to get object tagging after delete: %v", err)
+	}
+
+	if len(untagged.TagSet) != 0 {
+		t.Fatalf("expected no tags after delete, got %v", untagged.TagSet)
+	}
+
+	// The object itself must survive a tag delete.
+	if _, err := client.HeadObject(ctx, &s3.HeadObjectInput{
+		Bucket: aws.String(bucketName), Key: aws.String(key),
+	}); err != nil {
+		t.Fatalf("object removed by DeleteObjectTagging: %v", err)
+	}
 }

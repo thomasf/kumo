@@ -116,9 +116,12 @@ func (o *Object) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Tagging represents the XML structure for S3 object tagging.
+// Tagging represents the XML structure for S3 object and bucket tagging.
+// Xmlns is only set on bucket-tagging responses; object tagging has
+// always been served without it.
 type Tagging struct {
 	XMLName xml.Name `xml:"Tagging"`
+	Xmlns   string   `xml:"xmlns,attr,omitempty"`
 	TagSet  TagSet   `xml:"TagSet"`
 }
 

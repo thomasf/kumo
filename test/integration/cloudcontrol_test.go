@@ -5,11 +5,13 @@ package integration
 import (
 	"context"
 	"errors"
+	"strings"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudcontrol"
 	"github.com/aws/aws-sdk-go-v2/service/cloudcontrol/types"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/sivchari/golden"
 )
 
@@ -167,4 +169,82 @@ func stableCloudControlResourceDescription(
 	}
 
 	return out
+}
+
+// TestCloudControl_S3BucketTags checks that the resource's Tags property
+// is backed by the real S3 bucket tag set: set on create, visible through
+// GetResource, and rewritten by an UpdateResource patch.
+func TestCloudControl_S3BucketTags(t *testing.T) {
+	client := newCloudControlClient(t)
+	s3Client := newS3Client(t)
+	ctx := t.Context()
+	typeName := "AWS::S3::Bucket"
+	bucketName := "cloudcontrol-tagged-bucket"
+
+	_, _ = client.DeleteResource(context.Background(), &cloudcontrol.DeleteResourceInput{
+		TypeName:   aws.String(typeName),
+		Identifier: aws.String(bucketName),
+	})
+
+	t.Cleanup(func() {
+		_, _ = client.DeleteResource(context.Background(), &cloudcontrol.DeleteResourceInput{
+			TypeName:   aws.String(typeName),
+			Identifier: aws.String(bucketName),
+		})
+	})
+
+	_, err := client.CreateResource(ctx, &cloudcontrol.CreateResourceInput{
+		TypeName: aws.String(typeName),
+		DesiredState: aws.String(
+			`{"BucketName":"cloudcontrol-tagged-bucket","Tags":[{"Key":"env","Value":"prod"}]}`,
+		),
+		ClientToken: aws.String("cloudcontrol-s3-tags-create"),
+	})
+	if err != nil {
+		t.Fatalf("CreateResource: %v", err)
+	}
+
+	// The tags must be readable through the S3 API, not just echoed back.
+	tagging, err := s3Client.GetBucketTagging(ctx, &s3.GetBucketTaggingInput{Bucket: aws.String(bucketName)})
+	if err != nil {
+		t.Fatalf("GetBucketTagging after create: %v", err)
+	}
+
+	if len(tagging.TagSet) != 1 || aws.ToString(tagging.TagSet[0].Key) != "env" ||
+		aws.ToString(tagging.TagSet[0].Value) != "prod" {
+		t.Fatalf("bucket tags after create = %v, want env=prod", tagging.TagSet)
+	}
+
+	getOutput, err := client.GetResource(ctx, &cloudcontrol.GetResourceInput{
+		TypeName:   aws.String(typeName),
+		Identifier: aws.String(bucketName),
+	})
+	if err != nil {
+		t.Fatalf("GetResource: %v", err)
+	}
+
+	if props := aws.ToString(getOutput.ResourceDescription.Properties); !strings.Contains(
+		props, `"Tags":[{"Key":"env","Value":"prod"}]`,
+	) {
+		t.Fatalf("GetResource properties missing the bucket tags: %s", props)
+	}
+
+	_, err = client.UpdateResource(ctx, &cloudcontrol.UpdateResourceInput{
+		TypeName:      aws.String(typeName),
+		Identifier:    aws.String(bucketName),
+		PatchDocument: aws.String(`[{"op":"replace","path":"/Tags","value":[{"Key":"env","Value":"staging"}]}]`),
+		ClientToken:   aws.String("cloudcontrol-s3-tags-update"),
+	})
+	if err != nil {
+		t.Fatalf("UpdateResource: %v", err)
+	}
+
+	tagging, err = s3Client.GetBucketTagging(ctx, &s3.GetBucketTaggingInput{Bucket: aws.String(bucketName)})
+	if err != nil {
+		t.Fatalf("GetBucketTagging after update: %v", err)
+	}
+
+	if len(tagging.TagSet) != 1 || aws.ToString(tagging.TagSet[0].Value) != "staging" {
+		t.Fatalf("bucket tags after update = %v, want env=staging", tagging.TagSet)
+	}
 }

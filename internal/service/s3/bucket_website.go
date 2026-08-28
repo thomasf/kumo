@@ -174,7 +174,7 @@ func (s *MemoryStorage) DeleteBucketWebsite(_ context.Context, bucket string) er
 }
 
 // handleBucketLevelError maps BucketError → status code. Used by the
-// website / lifecycle / restore handlers added in this PR.
+// bucket sub-resource handlers (website, lifecycle, tagging, restore).
 func handleBucketLevelError(w http.ResponseWriter, r *http.Request, err error) {
 	var bucketErr *BucketError
 	if errors.As(err, &bucketErr) {
